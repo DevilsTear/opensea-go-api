@@ -1,4 +1,4 @@
-module github.com/gsmachado/go-opensea
+module github.com/DevilsTear/opensea-go-api
 
 go 1.17
 
