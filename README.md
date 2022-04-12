@@ -6,7 +6,7 @@ Golang library for OpenSea APIs (https://docs.opensea.io/reference).
 
 Get it:
 ```
-go get github.com/gsmachado/go-opensea
+go get github.com/DevilsTear/opensea-go-api
 ```
 
 Use it:
