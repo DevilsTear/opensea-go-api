@@ -8,6 +8,7 @@ import (
 	"math/big"
 	"net"
 	"net/http"
+	"net/url"
 	"time"
 )
 
@@ -20,6 +21,18 @@ type Opensea struct {
 	API        string
 	APIKey     string
 	httpClient *http.Client
+}
+
+type GetAssetsParams struct {
+	Owner                  Address
+	TokenIDs               []int32
+	AssetContractAddress   Address
+	AssetContractAddresses []Address
+	OrderBy                string
+	OrderDirection         string
+	Offset                 int
+	Limit                  int
+	Collection             string
 }
 
 type errorResponse struct {
@@ -48,22 +61,64 @@ func NewOpenseaRinkeby(apiKey string) (*Opensea, error) {
 	return o, nil
 }
 
-// TODO
-//func (o Opensea) GetAssets(params GetAssetsParams) (*AssetResponse, error) {
-//	ctx := context.TODO()
-//	return o.GetAssetsWithContext(ctx, params)
-//}
+func (p GetAssetsParams) Encode() string {
+	q := url.Values{}
 
-// TODO
-//func (o Opensea) GetAssetsWithContext(ctx context.Context, params GetAssetsParams) (*AssetResponse, error) {
-//	path := fmt.Sprintf("/api/v1/assets")
-//	b, err := o.GetPath(ctx, path)
-//	if err != nil {
-//		return nil, err
-//	}
-//	ret := new(AssetResponse)
-//	return ret, json.Unmarshal(b, ret)
-//}
+	if p.AssetContractAddress != NullAddress {
+		q.Set("owner", p.Owner.String())
+	}
+
+	if p.TokenIDs != nil && len(p.TokenIDs) > 0 {
+		for i := 0; i < len(p.TokenIDs); i++ {
+			q.Add("token_ids", fmt.Sprintf("%d", p.TokenIDs[i]))
+		}
+	}
+
+	if p.AssetContractAddress != NullAddress {
+		q.Set("asset_contract_address", p.AssetContractAddress.String())
+	}
+
+	q.Del("asset_contract_addresses")
+	if p.AssetContractAddresses != nil && len(p.AssetContractAddresses) > 0 {
+		for i := 0; i < len(p.AssetContractAddresses); i++ {
+			if p.AssetContractAddresses[i] != NullAddress {
+				q.Add("asset_contract_addresses", fmt.Sprintf("%d", p.AssetContractAddresses[i].String()))
+			}
+		}
+	}
+
+	if p.OrderBy != "" {
+		q.Set("order_by", p.OrderBy)
+	}
+
+	if p.OrderDirection != "" {
+		q.Set("order_direction", p.OrderDirection)
+	}
+
+	if p.Collection != "" {
+		q.Set("collection", p.Collection)
+	}
+
+	q.Set("limit", fmt.Sprintf("%d", p.Limit))
+	q.Set("offset", fmt.Sprintf("%d", p.Offset))
+
+	return q.Encode()
+}
+
+func (o Opensea) GetAssets(params GetAssetsParams) (*AssetResponse, error) {
+	ctx := context.TODO()
+	return o.GetAssetsWithContext(ctx, params)
+}
+
+func (o Opensea) GetAssetsWithContext(ctx context.Context, params GetAssetsParams) (*AssetResponse, error) {
+	path := "/api/v1/assets/?" + params.Encode()
+	b, err := o.GetPath(ctx, path)
+	if err != nil {
+		return nil, err
+	}
+	ret := new(AssetResponse)
+	return ret, json.Unmarshal(b, ret)
+}
 
 func (o Opensea) GetSingleAsset(assetContractAddress string, tokenID *big.Int) (*Asset, error) {
 	ctx := context.TODO()

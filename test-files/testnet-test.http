@@ -1,0 +1,60 @@
+GET http://localhost:8080/api/all
+Accept: application/json
+
+###
+# Get all NFT assets from an owner
+#
+# curl --request GET
+#     --url 'https://testnets-api.opensea.io/api/v1/assets?order_direction=desc&offset=0&limit=20'
+GET https://testnets-api.opensea.io/api/v1/assets?order_direction=desc&offset=0&limit=20
+Accept: application/json
+
+###
+
+# curl --request GET
+#     --url 'https://testnets-api.opensea.io/api/v1/events?only_opensea=false&offset=0&limit=20'
+#     --header 'Accept: application/json'
+GET https://testnets-api.opensea.io/api/v1/events?only_opensea=false&offset=0&limit=20
+Accept: application/json
+
+###
+
+# curl --request GET
+#     --url 'https://testnets-api.opensea.io/api/v1/events?asset_contract_address=a&token_id=a&only_opensea=false&offset=0&limit=20'
+#     --header 'Accept: application/json'
+GET https://testnets-api.opensea.io/api/v1/events?asset_contract_address=0x251b5f14a825c537ff788604ea1b58e49b70726f&only_opensea=false&offset=0
+Accept: application/json
+X-API-KEY: {{OPENSEA_TEST_API_TOKEN}}
+
+### Retrieving events
+
+# curl --request GET
+#     --url 'https://testnets-api.opensea.io/api/v1/events?collection_slug=forgotten-runes-mafriends&event_type=successful&only_opensea=false&offset=0&limit=20'
+#     --header 'Accept: application/json'
+GET https://testnets-api.opensea.io/api/v1/events?collection_slug=forgotten-runes-mafriends&event_type=successful&only_opensea=false&offset=0&limit=20
+Accept: application/json
+
+### Retrieving single collection
+
+# curl --request GET
+#     --url https://testnets-api.opensea.io/api/v1/collection/doodles-official
+GET https://testnets-api.opensea.io/api/v1/collection/doodles-official
+
+### Retrieving collections
+
+# curl --request GET
+#     --url 'https://testnets-api.opensea.io/api/v1/collections?offset=0&limit=20'
+#     --header 'Accept: application/json'
+GET https://testnets-api.opensea.io/api/v1/collections?offset=0&limit=20
+Accept: application/json
+
+### Retrieving bundles
+
+# curl --request GET
+#     --url 'https://testnets-api.opensea.io/api/v1/bundles?offset=0&limit=20'
+#     --header 'Accept: application/json'
+GET https://testnets-api.opensea.io/api/v1/bundles?offset=0&limit=20
+Accept: application/json
+
+###
+
