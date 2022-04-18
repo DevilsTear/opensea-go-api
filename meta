@@ -1,0 +1,3 @@
+NAME := opensea-go-api
+VERSION := 1.0.0
+BRANCH := main
