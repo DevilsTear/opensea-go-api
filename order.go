@@ -56,10 +56,7 @@ type Order struct {
 }
 
 func (o Order) IsPrivate() bool {
-	if o.Taker.Address != NullAddress {
-		return true
-	}
-	return false
+	return o.Taker.Address != NullAddress
 }
 
 type Side uint8
@@ -118,7 +115,7 @@ func (o Opensea) GetOrdersWithContext(ctx context.Context, assetContractAddress 
 
 	orders = []*Order{}
 
-	for true {
+	for {
 		q.Set("offset", fmt.Sprintf("%d", offset))
 		path := "/wyvern/v1/orders?" + q.Encode()
 		b, err := o.GetPath(ctx, path)

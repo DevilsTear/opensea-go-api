@@ -51,10 +51,7 @@ func (a Address) String() string {
 }
 
 func (a Address) IsNullAddress() bool {
-	if a.String() == NullAddress.String() {
-		return true
-	}
-	return false
+	return a.String() == NullAddress.String()
 }
 
 func (a *Address) UnmarshalJSON(b []byte) error {

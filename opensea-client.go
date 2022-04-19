@@ -24,15 +24,15 @@ type Opensea struct {
 }
 
 type GetAssetsParams struct {
-	Owner                  Address
-	TokenIDs               []int32
-	AssetContractAddress   Address
-	AssetContractAddresses []Address
-	OrderBy                string
-	OrderDirection         string
-	Offset                 int
-	Limit                  int
-	Collection             string
+	Owner                  Address   `json:"owner" bson:"owner"`
+	TokenIDs               []int32   `json:"token_ids" bson:"token_ids"`
+	AssetContractAddress   Address   `json:"asset_contract_address" bson:"asset_contract_address"`
+	AssetContractAddresses []Address `json:"asset_contract_addresses" bson:"asset_contract_addresses"`
+	OrderBy                string    `json:"order_by" bson:"order_by"`
+	OrderDirection         string    `json:"order_direction" bson:"order_direction"`
+	Offset                 int       `json:"offset" bson:"offset"`
+	Limit                  int       `json:"limit" bson:"limit"`
+	Collection             string    `json:"collection" bson:"collection"`
 }
 
 type errorResponse struct {
@@ -82,7 +82,7 @@ func (p GetAssetsParams) Encode() string {
 	if p.AssetContractAddresses != nil && len(p.AssetContractAddresses) > 0 {
 		for i := 0; i < len(p.AssetContractAddresses); i++ {
 			if p.AssetContractAddresses[i] != NullAddress {
-				q.Add("asset_contract_addresses", fmt.Sprintf("%d", p.AssetContractAddresses[i].String()))
+				q.Add("asset_contract_addresses", p.AssetContractAddresses[i].String())
 			}
 		}
 	}
@@ -142,6 +142,9 @@ func (o Opensea) GetPath(ctx context.Context, path string) ([]byte, error) {
 func (o Opensea) getURL(ctx context.Context, url string) ([]byte, error) {
 	client := o.httpClient
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	if err != nil {
+		return nil, err
+	}
 	req.Header.Add("X-API-KEY", o.APIKey)
 	req.Header.Add("Accept", "application/json")
 	resp, err := client.Do(req)
@@ -165,7 +168,7 @@ func (o Opensea) getURL(ctx context.Context, url string) ([]byte, error) {
 			return nil, e
 		}
 
-		return nil, fmt.Errorf("Backend returns status %d msg: %s", resp.StatusCode, string(body))
+		return nil, fmt.Errorf("backend returns status %d msg: %s", resp.StatusCode, string(body))
 	}
 
 	return body, nil
