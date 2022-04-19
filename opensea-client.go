@@ -23,7 +23,7 @@ type Opensea struct {
 	httpClient *http.Client
 }
 
-// AssetParams model info
+// GetAssetsParams model info
 // @Description Asset listing params
 type GetAssetsParams struct {
 	Owner                  Address   `json:"owner" bson:"owner"`
