@@ -6,8 +6,10 @@ import (
 	"fmt"
 	"io/ioutil"
 	"math/big"
+	"net"
 	"net/http"
 	"net/url"
+	"time"
 )
 
 var (
@@ -107,26 +109,10 @@ func (p GetAssetsParams) Encode() string {
 }
 
 func (o Opensea) GetAssets(params GetAssetsParams) (*AssetResponse, error) {
-	GetAssetsTest()
+	// GetAssetsTest()
 	ctx := context.TODO()
+	// o.SetHttpClient(http.DefaultClient)
 	return o.GetAssetsWithContext(ctx, params)
-}
-
-func GetAssetsTest() {
-	url := "https://api.opensea.io/api/v1/assets?order_direction=desc&limit=20"
-
-	req, _ := http.NewRequest("GET", url, nil)
-
-	req.Header.Add("Accept", "application/json")
-	req.Header.Add("X-API-KEY", "ad9d3916aa3a409f92a3bbd6aff78e8d")
-
-	res, _ := http.DefaultClient.Do(req)
-
-	defer res.Body.Close()
-	body, _ := ioutil.ReadAll(res.Body)
-
-	fmt.Println(res)
-	fmt.Println(string(body))
 }
 
 func (o Opensea) GetAssetsWithContext(ctx context.Context, params GetAssetsParams) (*AssetResponse, error) {
@@ -157,6 +143,23 @@ func (o Opensea) GetSingleAssetWithContext(ctx context.Context, assetContractAdd
 
 func (o Opensea) GetPath(ctx context.Context, path string) ([]byte, error) {
 	return o.getURL(ctx, o.API+path)
+}
+
+func GetAssetsTest() {
+	url := "https://api.opensea.io/api/v1/assets?order_direction=desc&limit=20"
+
+	req, _ := http.NewRequest("GET", url, nil)
+
+	req.Header.Add("Accept", "application/json")
+	req.Header.Add("X-API-KEY", "ad9d3916aa3a409f92a3bbd6aff78e8d")
+
+	res, _ := http.DefaultClient.Do(req)
+
+	defer res.Body.Close()
+	body, _ := ioutil.ReadAll(res.Body)
+
+	fmt.Println(res)
+	fmt.Println(string(body))
 }
 
 func (o Opensea) getURL(ctx context.Context, url string) ([]byte, error) {
@@ -199,22 +202,22 @@ func (o Opensea) SetHttpClient(httpClient *http.Client) {
 }
 
 func defaultHttpClient() *http.Client {
-	client := new(http.Client)
-	// var transport http.RoundTripper = &http.Transport{
-	// 	Proxy:              http.ProxyFromEnvironment,
-	// 	DisableKeepAlives:  false,
-	// 	DisableCompression: false,
-	// 	DialContext: (&net.Dialer{
-	// 		Timeout:   30 * time.Second,
-	// 		KeepAlive: 300 * time.Second,
-	// 		DualStack: true,
-	// 	}).DialContext,
-	// 	ForceAttemptHTTP2:     true,
-	// 	MaxIdleConns:          100,
-	// 	IdleConnTimeout:       90 * time.Second,
-	// 	TLSHandshakeTimeout:   5 * time.Second,
-	// 	ExpectContinueTimeout: 1 * time.Second,
-	// }
-	// client.Transport = transport
+	client := http.DefaultClient // new(http.Client)
+	var transport http.RoundTripper = &http.Transport{
+		Proxy:              http.ProxyFromEnvironment,
+		DisableKeepAlives:  false,
+		DisableCompression: false,
+		DialContext: (&net.Dialer{
+			Timeout:   30 * time.Second,
+			KeepAlive: 300 * time.Second,
+			DualStack: true,
+		}).DialContext,
+		ForceAttemptHTTP2:     true,
+		MaxIdleConns:          100,
+		IdleConnTimeout:       90 * time.Second,
+		TLSHandshakeTimeout:   5 * time.Second,
+		ExpectContinueTimeout: 1 * time.Second,
+	}
+	client.Transport = transport
 	return client
 }
