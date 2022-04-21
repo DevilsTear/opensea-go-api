@@ -103,13 +103,32 @@ func (p GetAssetsParams) Encode() string {
 
 	q.Set("limit", fmt.Sprintf("%d", p.Limit))
 	q.Set("offset", fmt.Sprintf("%d", p.Offset))
+	q.Set("include_orders", "false")
 
 	return q.Encode()
 }
 
 func (o Opensea) GetAssets(params GetAssetsParams) (*AssetResponse, error) {
+	GetAssetsTest()
 	ctx := context.TODO()
 	return o.GetAssetsWithContext(ctx, params)
+}
+
+func GetAssetsTest() {
+	url := "https://api.opensea.io/api/v1/assets?order_direction=desc&limit=20"
+
+	req, _ := http.NewRequest("GET", url, nil)
+
+	req.Header.Add("Accept", "application/json")
+	req.Header.Add("X-API-KEY", "ad9d3916aa3a409f92a3bbd6aff78e8d")
+
+	res, _ := http.DefaultClient.Do(req)
+
+	defer res.Body.Close()
+	body, _ := ioutil.ReadAll(res.Body)
+
+	fmt.Println(res)
+	fmt.Println(string(body))
 }
 
 func (o Opensea) GetAssetsWithContext(ctx context.Context, params GetAssetsParams) (*AssetResponse, error) {
@@ -130,12 +149,12 @@ func (o Opensea) GetSingleAsset(assetContractAddress string, tokenID *big.Int) (
 
 func (o Opensea) GetSingleAssetWithContext(ctx context.Context, assetContractAddress string, tokenID *big.Int) (*Asset, error) {
 	path := fmt.Sprintf("/api/v1/asset/%s/%s", assetContractAddress, tokenID.String())
-	b, err := o.GetPath(ctx, path)
+	body, err := o.GetPath(ctx, path)
 	if err != nil {
 		return nil, err
 	}
 	ret := new(Asset)
-	return ret, json.Unmarshal(b, ret)
+	return ret, json.Unmarshal(body, ret)
 }
 
 func (o Opensea) GetPath(ctx context.Context, path string) ([]byte, error) {
