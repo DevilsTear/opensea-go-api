@@ -109,7 +109,6 @@ func (p GetAssetsParams) Encode() string {
 }
 
 func (o Opensea) GetAssets(params GetAssetsParams) (*AssetResponse, error) {
-	GetAssetsTest()
 	ctx := context.TODO()
 	// o.SetHttpClient(http.DefaultClient)
 	return o.GetAssetsWithContext(ctx, params)
