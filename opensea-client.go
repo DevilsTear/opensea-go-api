@@ -109,7 +109,7 @@ func (p GetAssetsParams) Encode() string {
 }
 
 func (o Opensea) GetAssets(params GetAssetsParams) (*AssetResponse, error) {
-	GetAssetsTest()
+	//GetAssetsTest()
 	ctx := context.TODO()
 	o.SetHttpClient(http.DefaultClient)
 	return o.GetAssetsWithContext(ctx, params)
@@ -194,6 +194,7 @@ func (o Opensea) getURL(ctx context.Context, url string) ([]byte, error) {
 		return nil, fmt.Errorf("backend returns status %d msg: %s", resp.StatusCode, string(body))
 	}
 
+	fmt.Println(string(body))
 	return body, nil
 }
 
