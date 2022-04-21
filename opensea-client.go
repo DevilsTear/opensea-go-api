@@ -109,9 +109,9 @@ func (p GetAssetsParams) Encode() string {
 }
 
 func (o Opensea) GetAssets(params GetAssetsParams) (*AssetResponse, error) {
-	// GetAssetsTest()
+	GetAssetsTest()
 	ctx := context.TODO()
-	// o.SetHttpClient(http.DefaultClient)
+	o.SetHttpClient(http.DefaultClient)
 	return o.GetAssetsWithContext(ctx, params)
 }
 
@@ -164,7 +164,7 @@ func GetAssetsTest() {
 
 func (o Opensea) getURL(ctx context.Context, url string) ([]byte, error) {
 	client := o.httpClient
-	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -202,7 +202,7 @@ func (o Opensea) SetHttpClient(httpClient *http.Client) {
 }
 
 func defaultHttpClient() *http.Client {
-	client := http.DefaultClient // new(http.Client)
+	client := new(http.Client)
 	var transport http.RoundTripper = &http.Transport{
 		Proxy:              http.ProxyFromEnvironment,
 		DisableKeepAlives:  false,
