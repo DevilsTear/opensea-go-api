@@ -6,10 +6,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"math/big"
-	"net"
 	"net/http"
 	"net/url"
-	"time"
 )
 
 var (
@@ -202,21 +200,21 @@ func (o Opensea) SetHttpClient(httpClient *http.Client) {
 
 func defaultHttpClient() *http.Client {
 	client := new(http.Client)
-	var transport http.RoundTripper = &http.Transport{
-		Proxy:              http.ProxyFromEnvironment,
-		DisableKeepAlives:  false,
-		DisableCompression: false,
-		DialContext: (&net.Dialer{
-			Timeout:   30 * time.Second,
-			KeepAlive: 300 * time.Second,
-			DualStack: true,
-		}).DialContext,
-		ForceAttemptHTTP2:     true,
-		MaxIdleConns:          100,
-		IdleConnTimeout:       90 * time.Second,
-		TLSHandshakeTimeout:   5 * time.Second,
-		ExpectContinueTimeout: 1 * time.Second,
-	}
-	client.Transport = transport
+	// var transport http.RoundTripper = &http.Transport{
+	// 	Proxy:              http.ProxyFromEnvironment,
+	// 	DisableKeepAlives:  false,
+	// 	DisableCompression: false,
+	// 	DialContext: (&net.Dialer{
+	// 		Timeout:   30 * time.Second,
+	// 		KeepAlive: 300 * time.Second,
+	// 		DualStack: true,
+	// 	}).DialContext,
+	// 	ForceAttemptHTTP2:     true,
+	// 	MaxIdleConns:          100,
+	// 	IdleConnTimeout:       90 * time.Second,
+	// 	TLSHandshakeTimeout:   5 * time.Second,
+	// 	ExpectContinueTimeout: 1 * time.Second,
+	// }
+	// client.Transport = transport
 	return client
 }
