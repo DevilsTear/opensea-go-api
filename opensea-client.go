@@ -66,7 +66,7 @@ func NewOpenseaRinkeby(apiKey string) (*Opensea, error) {
 func (p GetAssetsParams) Encode() string {
 	q := url.Values{}
 
-	if p.AssetContractAddress != NullAddress {
+	if p.Owner != NullAddress {
 		q.Set("owner", p.Owner.String())
 	}
 
