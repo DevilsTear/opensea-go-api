@@ -114,12 +114,13 @@ func (o Opensea) GetAssets(params GetAssetsParams) (*AssetResponse, error) {
 
 func (o Opensea) GetAssetsWithContext(ctx context.Context, params GetAssetsParams) (*AssetResponse, error) {
 	path := "/api/v1/assets/?" + params.Encode()
-	b, err := o.GetPath(ctx, path)
+	body, err := o.GetPath(ctx, path)
 	if err != nil {
 		return nil, err
 	}
 	ret := new(AssetResponse)
-	return ret, json.Unmarshal(b, ret)
+	fmt.Println(string(body))
+	return ret, json.Unmarshal(body, ret)
 }
 
 func (o Opensea) GetSingleAsset(assetContractAddress string, tokenID *big.Int) (*Asset, error) {
