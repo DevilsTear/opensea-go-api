@@ -109,9 +109,9 @@ func (p GetAssetsParams) Encode() string {
 }
 
 func (o Opensea) GetAssets(params GetAssetsParams) (*AssetResponse, error) {
-	//GetAssetsTest()
+	GetAssetsTest()
 	ctx := context.TODO()
-	o.SetHttpClient(http.DefaultClient)
+	// o.SetHttpClient(http.DefaultClient)
 	return o.GetAssetsWithContext(ctx, params)
 }
 
@@ -158,8 +158,16 @@ func GetAssetsTest() {
 	defer res.Body.Close()
 	body, _ := ioutil.ReadAll(res.Body)
 
-	fmt.Println(res)
+	fmt.Println("\"n")
+	fmt.Println("**********************TEST BODY START***************")
+	fmt.Println("\"n")
+
+	// fmt.Println(res)
 	fmt.Println(string(body))
+
+	fmt.Println("\"n")
+	fmt.Println("**********************TEST BODY END***************")
+	fmt.Println("\"n")
 }
 
 func (o Opensea) getURL(ctx context.Context, url string) ([]byte, error) {
@@ -194,7 +202,15 @@ func (o Opensea) getURL(ctx context.Context, url string) ([]byte, error) {
 		return nil, fmt.Errorf("backend returns status %d msg: %s", resp.StatusCode, string(body))
 	}
 
+	fmt.Println("\"n")
+	fmt.Println("**********************PROD BODY START***************")
+	fmt.Println("\"n")
+
 	fmt.Println(string(body))
+
+	fmt.Println("\"n")
+	fmt.Println("**********************PROD BODY END***************")
+	fmt.Println("\"n")
 	return body, nil
 }
 
