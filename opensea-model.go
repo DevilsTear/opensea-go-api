@@ -217,7 +217,7 @@ type Asset struct {
 	LastSale                string         `json:"last_sale" bson:"last_sale"`
 	TopBid                  float64        `json:"top_bid" bson:"top_bid"`
 	ListingDate             string         `json:"listing_date" bson:"listing_date"`
-	IsPreSale               string         `json:"is_presale" bson:"is_presale"`
+	IsPreSale               bool           `json:"is_presale" bson:"is_presale"`
 	TransferFeePaymentToken string         `json:"transfer_fee_payment_token" bson:"transfer_fee_payment_token"`
 	TransferFee             float64        `json:"transfer_fee" bson:"transfer_fee"`
 }
