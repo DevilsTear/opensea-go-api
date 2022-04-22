@@ -9,6 +9,7 @@ import (
 	"net"
 	"net/http"
 	"net/url"
+	"strconv"
 	"time"
 )
 
@@ -28,13 +29,15 @@ type Opensea struct {
 type GetAssetsParams struct {
 	Owner                  Address   `json:"owner" bson:"owner"`
 	TokenIDs               []int32   `json:"token_ids" bson:"token_ids"`
+	Collection             string    `json:"collection" bson:"collection"`
+	CollectionSlug         string    `json:"collection_slug" bson:"collection_slug"`
+	CollectionEditor       string    `json:"collection_editor" bson:"collection_editor"`
+	OrderDirection         string    `json:"order_direction" bson:"order_direction"`
 	AssetContractAddress   Address   `json:"asset_contract_address" bson:"asset_contract_address"`
 	AssetContractAddresses []Address `json:"asset_contract_addresses" bson:"asset_contract_addresses"`
-	OrderBy                string    `json:"order_by" bson:"order_by"`
-	OrderDirection         string    `json:"order_direction" bson:"order_direction"`
-	Offset                 *int      `json:"offset" bson:"offset"`
+	Cursor                 *int      `json:"offset" bson:"offset"`
 	Limit                  *int      `json:"limit" bson:"limit"`
-	Collection             string    `json:"collection" bson:"collection"`
+	IncludeOrders          *bool     `json:"include_orders" bson:"include_orders"`
 }
 
 type errorResponse struct {
@@ -76,6 +79,22 @@ func (p GetAssetsParams) Encode() string {
 		}
 	}
 
+	if p.Collection != "" {
+		q.Set("collection", p.Collection)
+	}
+
+	if p.CollectionSlug != "" {
+		q.Set("collection_slug", p.Collection)
+	}
+
+	if p.CollectionEditor != "" {
+		q.Set("collection_editor", p.Collection)
+	}
+
+	if p.OrderDirection != "" {
+		q.Set("order_direction", p.OrderDirection)
+	}
+
 	if p.AssetContractAddress.String() != "" && p.AssetContractAddress != NullAddress {
 		q.Set("asset_contract_address", p.AssetContractAddress.String())
 	}
@@ -89,21 +108,19 @@ func (p GetAssetsParams) Encode() string {
 		}
 	}
 
-	if p.OrderBy != "" {
-		q.Set("order_by", p.OrderBy)
+	if p.Cursor != nil && *p.Cursor > 0 {
+		q.Set("cursor", fmt.Sprintf("%d", *p.Cursor))
 	}
 
-	if p.OrderDirection != "" {
-		q.Set("order_direction", p.OrderDirection)
+	if p.Limit != nil && *p.Limit > 0 {
+		q.Set("limit", fmt.Sprintf("%d", *p.Limit))
 	}
 
-	if p.Collection != "" {
-		q.Set("collection", p.Collection)
+	if p.IncludeOrders != nil {
+		if includeOrders, err := strconv.ParseBool(fmt.Sprintf("%v", *p.IncludeOrders)); err != nil {
+			q.Set("include_orders", strconv.FormatBool(includeOrders))
+		}
 	}
-
-	q.Set("limit", fmt.Sprintf("%d", p.Limit))
-	q.Set("offset", fmt.Sprintf("%d", p.Offset))
-	q.Set("include_orders", "false")
 
 	return q.Encode()
 }
@@ -166,7 +183,7 @@ func (o Opensea) GetPath(ctx context.Context, path string) ([]byte, error) {
 }
 
 func (o Opensea) getURLTest(ctx context.Context, url string) ([]byte, error) {
-	url = "https://api.opensea.io/api/v1/assets?order_direction=desc&limit=20"
+	// url = "https://api.opensea.io/api/v1/assets?order_direction=desc&limit=20"
 
 	req, _ := http.NewRequest("GET", url, nil)
 
@@ -193,7 +210,7 @@ func (o Opensea) getURLTest(ctx context.Context, url string) ([]byte, error) {
 }
 
 func (o Opensea) getURL(ctx context.Context, url string) ([]byte, error) {
-	url = "https://api.opensea.io/api/v1/assets?order_direction=desc&limit=20"
+	// url = "https://api.opensea.io/api/v1/assets?order_direction=desc&limit=20"
 	client := o.httpClient
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
