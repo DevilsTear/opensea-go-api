@@ -108,6 +108,12 @@ func (p GetAssetsParams) Encode() string {
 	return q.Encode()
 }
 
+func (o Opensea) GetAssetsTest(params GetAssetsParams) (*AssetResponse, error) {
+	ctx := context.TODO()
+	// o.SetHttpClient(http.DefaultClient)
+	return o.GetAssetsWithContextTest(ctx, params)
+}
+
 func (o Opensea) GetAssets(params GetAssetsParams) (*AssetResponse, error) {
 	ctx := context.TODO()
 	// o.SetHttpClient(http.DefaultClient)
@@ -117,6 +123,17 @@ func (o Opensea) GetAssets(params GetAssetsParams) (*AssetResponse, error) {
 func (o Opensea) GetAssetsWithContext(ctx context.Context, params GetAssetsParams) (*AssetResponse, error) {
 	path := "/api/v1/assets/?" + params.Encode()
 	body, err := o.GetPath(ctx, path)
+	if err != nil {
+		return nil, err
+	}
+	ret := new(AssetResponse)
+	fmt.Println(string(body))
+	return ret, json.Unmarshal(body, ret)
+}
+
+func (o Opensea) GetAssetsWithContextTest(ctx context.Context, params GetAssetsParams) (*AssetResponse, error) {
+	path := "/api/v1/assets/?" + params.Encode()
+	body, err := o.GetPathTest(ctx, path)
 	if err != nil {
 		return nil, err
 	}
@@ -140,12 +157,16 @@ func (o Opensea) GetSingleAssetWithContext(ctx context.Context, assetContractAdd
 	return ret, json.Unmarshal(body, ret)
 }
 
+func (o Opensea) GetPathTest(ctx context.Context, path string) ([]byte, error) {
+	return o.getURLTest(ctx, o.API+path)
+}
+
 func (o Opensea) GetPath(ctx context.Context, path string) ([]byte, error) {
 	return o.getURL(ctx, o.API+path)
 }
 
-func GetAssetsTest() {
-	url := "https://api.opensea.io/api/v1/assets?order_direction=desc&limit=20"
+func (o Opensea) getURLTest(ctx context.Context, url string) ([]byte, error) {
+	url = "https://api.opensea.io/api/v1/assets?order_direction=desc&limit=20"
 
 	req, _ := http.NewRequest("GET", url, nil)
 
@@ -167,11 +188,14 @@ func GetAssetsTest() {
 	fmt.Println("\"n")
 	fmt.Println("**********************TEST BODY END***************")
 	fmt.Println("\"n")
+
+	return body, nil
 }
 
 func (o Opensea) getURL(ctx context.Context, url string) ([]byte, error) {
+	url = "https://api.opensea.io/api/v1/assets?order_direction=desc&limit=20"
 	client := o.httpClient
-	req, err := http.NewRequest("GET", url, nil)
+	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		return nil, err
 	}

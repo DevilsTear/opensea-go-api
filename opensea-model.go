@@ -114,8 +114,8 @@ func (t *TimeNano) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return err
 	}
-	tt := time.Time{}
-	tt, err = time.Parse("2006-01-02T15:04:05.999999", s)
+	// tt := time.Time{}
+	tt, err := time.Parse("2006-01-02T15:04:05.999999", s)
 	// if strings.Contains(s, ".") {
 	//      tt, err = time.Parse("2006-01-02T15:04:05.999999", s)
 	// } else {
@@ -248,7 +248,7 @@ type AssetContract struct {
 	Owner                       int64       `json:"owner" bson:"owner"`
 	SchemaName                  string      `json:"schema_name" bson:"schema_name"`
 	Symbol                      string      `json:"symbol" bson:"symbol"`
-	TotalSupply                 int64       `json:"total_supply" bson:"total_supply"`
+	TotalSupply                 string      `json:"total_supply" bson:"total_supply"` //int64 `json:"total_supply,string,omitempty" bson:"total_supply"`
 	Description                 string      `json:"description" bson:"description"`
 	ExternalLink                string      `json:"external_link" bson:"external_link"`
 	ImageURL                    string      `json:"image_url" bson:"image_url"`
