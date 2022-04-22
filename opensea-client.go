@@ -254,9 +254,9 @@ func (o Opensea) getURL(ctx context.Context, url string) ([]byte, error) {
 	return body, nil
 }
 
-func (o Opensea) SetHttpClient(httpClient *http.Client) {
-	o.httpClient = httpClient
-}
+// func (o Opensea) SetHttpClient(httpClient *http.Client) {
+// 	o.httpClient = httpClient
+// }
 
 func defaultHttpClient() *http.Client {
 	client := new(http.Client)

@@ -12,8 +12,8 @@ import (
 )
 
 var (
-	o        = &Opensea{}
-	owner    = "0xd868711BD9a2C6F1548F5f4737f71DA67d821090"
+	o = &Opensea{}
+	// owner    = "0xd868711BD9a2C6F1548F5f4737f71DA67d821090"
 	contract = "0xdceaf1652a131f32a821468dc03a92df0edd86ea"
 	tokenID  = big.NewInt(50010001)
 )
