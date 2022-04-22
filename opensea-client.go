@@ -32,8 +32,8 @@ type GetAssetsParams struct {
 	AssetContractAddresses []Address `json:"asset_contract_addresses" bson:"asset_contract_addresses"`
 	OrderBy                string    `json:"order_by" bson:"order_by"`
 	OrderDirection         string    `json:"order_direction" bson:"order_direction"`
-	Offset                 *int      `json:"offset" bson:"offset"`
-	Limit                  *int      `json:"limit" bson:"limit"`
+	Offset                 int       `json:"offset" bson:"offset"`
+	Limit                  int       `json:"limit" bson:"limit"`
 	Collection             string    `json:"collection" bson:"collection"`
 }
 
